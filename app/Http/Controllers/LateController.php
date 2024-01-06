@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Exports\StudentExports;
+use App\Exports\LateExportPs;
 use App\Models\late;
+use App\Models\rayon;
 use App\Models\student;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use PDF;
 use Excel;
+use Illuminate\Support\Facades\Auth;
 
 class LateController extends Controller
 {
@@ -20,7 +23,7 @@ class LateController extends Controller
         $lates = Late::with('student')->get();
         $groupedLates = $lates->groupBy('student_id');
      
-        return view('late.index', compact('lates' , 'groupedLates'));
+        return view('late.admin.index', compact('lates' , 'groupedLates'));
     }
 
     /**
@@ -30,7 +33,7 @@ class LateController extends Controller
     {
         $students = student::All();
         $lates = late::All();
-        return view('late.create' , compact('lates','students'));
+        return view('late.admin.create' , compact('lates','students'));
     }
 
     /**
@@ -82,14 +85,22 @@ class LateController extends Controller
         view()->share('students', $students);
         view()->share('lateByStudent', $lateByStudent);
 
-        $pdf = PDF::loadView('late.pdf', compact('relatedLates', 'students', 'lateByStudent'));
+        $pdf = PDF::loadView('late.admin.pdf', compact('relatedLates', 'students', 'lateByStudent'));
 
         return $pdf->download('Surat.pdf');
     }
 
     public function exportExcel(){
-        $excel = 'DataKeterlambatan' . '.xlsx';
-        return Excel::download(new StudentExports, $excel);
+        $role = auth()->user()->role;
+
+        if ($role === 'admin') {
+            return Excel::download(new StudentExports, 'keterlambatan.xlsx');
+        } else {
+            $userIdLogin = Auth::id();
+            $rayonIdLogin = rayon::where('user_id', $userIdLogin)->value('id');
+
+            return Excel::download(new LateExportPs($userIdLogin, $rayonIdLogin), 'keterlambatan.xlsx');
+        }
     }
     
     /**
@@ -99,7 +110,7 @@ class LateController extends Controller
     {
         $student = Student::find($student_id);
         $lates = late::where('student_id', $student_id)->get();
-        return view('late.bukti', compact('student', 'lates'));
+        return view('late.admin.bukti', compact('student', 'lates'));
     }
 
     /**
@@ -110,7 +121,7 @@ class LateController extends Controller
         $lates = late::where('id', $id)->first();
         $students = student::All();
       
-        return view('late.edit', compact( 'lates' ,'students'));
+        return view('late.admin.edit', compact( 'lates' ,'students'));
     }
 
     /**
@@ -128,6 +139,23 @@ class LateController extends Controller
     {
         late::where('id', $id)->delete();
         student::where('id', $id)->delete();
-        return redirect()->route('late.index')->with('deleted', 'Berhasil menghapus data!!!');
+        return redirect()->route('admin.late.index')->with('deleted', 'Berhasil menghapus data!!!');
     }
+
+
+
+
+
+
+    public function indexPS()
+    {
+        $rayon = rayon::where('user_id', Auth::user()->id)->pluck('id');
+        $siswa = student::where('rayon_id' , $rayon)->get();
+        $lates = Late::whereIn('student_id', $siswa->pluck('id'))->with('student')->get();
+
+        $groupedLates = $lates->groupBy('student_id');
+     
+        return view('late.ps.index', compact('lates' , 'groupedLates' , 'siswa'));
+    }
+
 }

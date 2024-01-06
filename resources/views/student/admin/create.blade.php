@@ -1,7 +1,7 @@
 @extends('layout.sidebare');
 @section('Content')
 <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
-    <form class="max-w-sm mx-auto " action="{{ route('student.store') }}" method="POST">
+    <form class="max-w-sm mx-auto " action="{{ route('admin.student.store') }}" method="POST">
         @csrf
         <div class="mb-5">
           <label for="nis" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">NIS Siswa:</label>

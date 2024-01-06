@@ -3,7 +3,7 @@
       <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
           <a href="{{ route('late.create') }}"><button type="submit"
                   class="ml-8 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Tambah</button></a>
-          <a href="{{ route('late.excel') }}"><button type="submit"
+          <a href="{{ route('late.excel-download') }}"><button type="submit"
                   class=" text-white focus:outline-none focus:bg-teal-500 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center bg-teal-500 hover:bg-teal-600 :focus:ring-teal-600">Export
                   Data</button></a>
 

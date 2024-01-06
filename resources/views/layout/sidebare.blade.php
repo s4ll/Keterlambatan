@@ -13,7 +13,7 @@
     @vite('resources/css/app.css')
 </head>
 <body class="text-gray-800 font-inter">
-    <!-- start: Sidebar -->
+    @if (Auth::user()-> role == 'admin')
     <div class="fixed left-0 top-0 w-64 h-full bg-sky-950 p-4 z-50 sidebar-menu transition-transform">
         <a href="#" class="flex items-center pb-4 border-b border-b-slate-50 mt-3">
             <i class="fa-solid fa-circle-user fa-2xl" style="color: #ffffff;"></i>
@@ -40,7 +40,7 @@
                         <a href="{{ route('rayon.index') }}" class="text-gray-300 text-sm flex items-center hover:text-gray-100 before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">Data Rayon</a>
                     </li> 
                     <li class="mb-4">
-                        <a href="{{ route('student.index') }}" class="text-gray-300 text-sm flex items-center hover:text-gray-100 before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">Data Siswa</a>
+                        <a href="{{ route('admin.student.index') }}" class="text-gray-300 text-sm flex items-center hover:text-gray-100 before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">Data Siswa</a>
                     </li> 
                     <li class="mb-4">
                         <a href="{{ route('user.index') }}" class="text-gray-300 text-sm flex items-center hover:text-gray-100 before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">Data User</a>
@@ -53,7 +53,7 @@
                     <span class="text-sm">Data Keterlambatan</span>
                 </a>
             </li>
-            <li class="mb-1 group">
+            <li class="mt-96 group">
                 <a href="{{ route('logout') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
                     <i class="fa-solid fa-arrow-right-from-bracket fa-flip-horizontal fa-sm" style="color: #ffffff;"></i>
                     <span class="text-sm ml-3">Logout</span>
@@ -82,8 +82,64 @@
         </div>
     </main>
     {{-- end: Main --}}
-   
+    @else
+         <!-- start: Sidebar -->
+    <div class="fixed left-0 top-0 w-64 h-full bg-sky-950 p-4 z-50 sidebar-menu transition-transform">
+        <a href="#" class="flex items-center pb-4 border-b border-b-slate-50 mt-3">
+            <i class="fa-solid fa-circle-user fa-2xl" style="color: #ffffff;"></i>
+            <span class="text-lg font-bold text-white ml-3">PS</span>
+        </a>
+        <ul class="mt-4">
+            <li class="mb-1 group">
+                <a href="{{ route('index') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                    <i class="fa-solid fa-house fa-sm" style="color: #ffffff;"></i>
+                    <span class="text-sm ml-3">Dashboard</span>
+                </a>
+            </li>
+        
+            <li class="mb-1 group">
+                <a href="{{ route('ps.student.data', '[id]')}}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                    <i class="fa-solid fa-server fa-sm" style="color: #ffffff;"></i>
+                    <span class="text-sm ml-3">Data Siswa</span>
+                </a>
+            </li>
+            <li class="mb-1 group">
+                <a href="{{ route('ps.late.indexPS')}}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                    <i class="ri-settings-2-line mr-3 text-lg"></i>
+                    <span class="text-sm">Data Keterlambatan</span>
+                </a>
+            </li>
+            <li class="mt-96 group">
+                <a href="{{ route('logout') }}" class="flex items-center py-2 px-4 text-gray-300 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white group-[.selected]:bg-gray-950 group-[.selected]:text-gray-100">
+                    <i class="fa-solid fa-arrow-right-from-bracket fa-flip-horizontal fa-sm" style="color: #ffffff;"></i>
+                    <span class="text-sm ml-3">Logout</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+     <!-- end: Sidebar -->
 
+    <!-- start: Main -->
+    <main class="w-full md:w-[calc(100%-256px)] md:ml-64 bg-gray-50 min-h-screen transition-all main">
+        <div class="py-2 px-6 bg-white flex items-center shadow-md shadow-black/5 sticky top-0 left-0 z-30 " style="margin-top: -2rem">
+            <button type="button" class="text-lg text-gray-600 sidebar-toggle">
+                <i class="ri-menu-line"></i>
+            </button>
+            <ul class="flex items-center text-sm ml-4">
+                <li class="mr-2">
+                    <a href="{{ route('index') }}" class="text-gray-400 hover:text-gray-600 font-medium">Dashboard</a>
+                </li>
+            </ul>
+        </div>
+        <div class="p-6">
+        <div class="Content">
+            @yield('Content')
+        </div>
+        </div>
+    </main>
+    {{-- end: Main --}}
+    @endif
+   
     <div class="fixed top-0 left-0 w-full h-full bg-black/50 z-40 md:hidden sidebar-overlay"></div>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

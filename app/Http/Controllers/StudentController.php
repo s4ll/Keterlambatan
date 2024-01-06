@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\student;
 use App\Models\rayon;
-use App\Models\user;
+use App\Models\User;
 use App\Models\rombel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -19,9 +20,15 @@ class StudentController extends Controller
         $rombels = rombel::All();
         $rayons = rayon::All();
       
-        return view('student.index', compact('students', 'rayons', 'rombels'));
+        return view('student.admin.index', compact('students', 'rayons', 'rombels'));
     }
 
+    public function data(){
+        $rayon = rayon::where('user_id', Auth::user()->id)->pluck('id');
+        $students = student::whereIn('rayon_id', $rayon)->get();
+
+        return view('student.ps.data' , compact('students'));
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -31,7 +38,7 @@ class StudentController extends Controller
         $rombels = rombel::All();
         $rayons = rayon::All();
     
-        return view('student.create', compact('students' ,'rayons', 'rombels'));
+        return view('student.admin.create', compact('students' ,'rayons', 'rombels'));
     }
 
     /**
@@ -53,7 +60,7 @@ class StudentController extends Controller
             'rayon_id' => $request->rayon_id,
         ]);
 
-        return redirect()->route('student.index')->with('success', 'Data berhasil di tambah !!!');
+        return redirect()->route('admin.student.index')->with('success', 'Data berhasil di tambah !!!');
     }
 
     /**
@@ -73,7 +80,7 @@ class StudentController extends Controller
         $rombels = rombel::All();
         $rayons = rayon::All();
      
-        return view('student.edit', compact('student', 'rombels', 'rayons'));
+        return view('student.admin.edit', compact('student', 'rombels', 'rayons'));
     }
 
     /**
@@ -96,7 +103,7 @@ class StudentController extends Controller
             'rayon_id' => $request->rayon_id,
         ]);
 
-        return redirect()->route('student.index')->with('success', 'Berhasil Mengupdate Siswa!');
+        return redirect()->route('admin.student.index')->with('success', 'Berhasil Mengupdate Siswa!');
     }
 
     /**

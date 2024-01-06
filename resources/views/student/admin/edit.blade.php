@@ -2,7 +2,7 @@
 @section('Content')
 <div class="bg-white rounded-md border border-gray-100 p-6 shadow-md shadow-black/5">
    
-    <form class="max-w-sm mx-auto " action="{{ route('student.update' , $student['id']) }}" method="POST">
+    <form class="max-w-sm mx-auto " action="{{ route('admin.student.update' , $student['id']) }}" method="POST">
         @csrf
         @method('PATCH')
         @if ($errors->any())

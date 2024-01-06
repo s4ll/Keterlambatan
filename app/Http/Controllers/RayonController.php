@@ -11,11 +11,22 @@ class RayonController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+    //     $rayons = rayon::All();
+    //     $users = User::All();
+    //     return view('rayon.index', compact('rayons', 'users'));
+    // }
+
+    public function index(Request $request)
     {
-        $rayons = rayon::All();
-        $users = User::All();
-        return view('rayon.index', compact('rayons', 'users'));
+        $search = $request->input('rayons');
+        if ($search) {
+            $rayons = rayon::where('rayon', 'like', '%' . $search . '%')->simplePaginate(5);
+        } else {
+            $rayons = rayon::simplePaginate(5);
+        }
+        return view('rayon.index', compact('rayons'));
     }
 
     /**

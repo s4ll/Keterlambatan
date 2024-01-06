@@ -10,12 +10,24 @@ class RombelController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    // public function index()
+    // {
+
+    //     $rombels = rombel::orderBy('rombel', 'ASC')->simplePaginate(5);
+
+    //     return view('rombel.index', compact('rombels'));
+
+    // }
+
+    public function index(Request $request)
     {
-        $rombels = rombel::orderBy('rombel', 'ASC')->simplePaginate(5);
-
+        $search = $request->input('rombels');
+        if ($search) {
+            $rombels = Rombel::where('rombel', 'like', '%' . $search . '%')->simplePaginate(5);
+        } else {
+            $rombels = Rombel::simplePaginate(5);
+        }
         return view('rombel.index', compact('rombels'));
-
     }
 
     /**

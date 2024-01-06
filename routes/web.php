@@ -31,13 +31,13 @@ Route::middleware(['IsLogin'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('index');
     Route::middleware(['IsAdmin'])->group(function(){
         Route::prefix('rombel')->name('rombel.')->group(function() {
-      
             Route::get('/create', [RombelController::class, 'create'])->name('create');
             Route::post('/store', [RombelController::class, 'store'])->name('store');
             Route::get('/data', [RombelController::class, 'index'])->name('index');
             Route::get('/edit/{id}', [RombelController::class, 'edit'])->name('edit');
             Route::patch('/update/{id}', [RombelController::class, 'update'])->name('update');
             Route::delete('/delete/{id}', [RombelController::class, 'destroy'])->name('delete');
+          
         });
         
         Route::prefix('rayon')->name('rayon.')->group(function() {
@@ -58,7 +58,7 @@ Route::middleware(['IsLogin'])->group(function () {
             Route::delete('/delete/{id}', [UserController::class, 'destroy'])->name('delete');
         });
         
-        Route::prefix('student')->name('student.')->group(function() {
+        Route::prefix('student')->name('admin.student.')->group(function() {
             Route::get('/', [StudentController::class, 'index'])->name('index');
             Route::get('/create', [StudentController::class, 'create'])->name('create');
             Route::post('/store', [StudentController::class, 'store'])->name('store');
@@ -67,7 +67,7 @@ Route::middleware(['IsLogin'])->group(function () {
             Route::delete('/delete/{id}', [StudentController::class, 'destroy'])->name('delete');
         });
         
-        Route::prefix('late')->name('late.')->group(function() {
+        Route::prefix('/admin/late')->name('late.')->group(function() {
             Route::get('/', [LateController::class, 'index'])->name('index');
             Route::get('/create', [LateController::class, 'create'])->name('create');
             Route::post('/store', [LateController::class, 'store'])->name('store');
@@ -76,7 +76,18 @@ Route::middleware(['IsLogin'])->group(function () {
             Route::patch('/update/{id}', [LateController::class, 'update'])->name('update');
             Route::delete('/delete/{id}', [LateController::class, 'destroy'])->name('delete');
             Route::get('/download/{id}', [LateController::class, 'downloadPDF'])->name('download');
-            Route::get('/excel', [LateController::class, 'exportExcel'])->name('excel');
+            Route::get('/excel', [LateController::class, 'exportExcel'])->name('excel-download');
+        });
+    });
+    Route::middleware(['IsPS'])->group(function (){
+        Route::prefix('student')->name('ps.student.')->group(function() {
+            Route::get('/data', [StudentController::class, 'data'])->name('data');
+        });
+        Route::prefix('late')->name('ps.late.')->group(function() {
+            Route::get('/data', [LateController::class, 'indexPS'])->name('indexPS');
+            Route::get('/show/{student_id}', [LateController::class, 'show'])->name('PsShow');
+            Route::get('/download/{id}', [LateController::class, 'downloadPDF'])->name('Psdownload');
+            Route::get('/excel', [LateController::class, 'exportExcel'])->name('PSexcel');
         });
     });
 });

@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 use illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
-class IsKasir
+
+class IsPS
 {
     /**
      * Handle an incoming request.
